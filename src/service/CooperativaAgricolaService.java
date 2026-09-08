@@ -33,13 +33,15 @@ public class CooperativaAgricolaService {
 
     public List<Entrega> getEntregas() { return entregas; }
 
-    public void registrarEntrega(Produtor produtor, ProdutoAgricola produto, double quantidade, boolean institucional) throws QuantidadeInvalidaException {
+    public Entrega registrarEntrega(Produtor produtor, ProdutoAgricola produto, double quantidade, boolean institucional) throws QuantidadeInvalidaException {
         if (quantidade <= 0) {
             throw new QuantidadeInvalidaException("Erro: A quantidade ou preço informados são inválidos (devem ser maiores que zero).");
         }
         Calculavel precificacao = institucional ? new PrecificacaoInstitucional() : new PrecificacaoPadrao();
         Entrega entrega = new Entrega(produtor, produto, quantidade, precificacao);
         entregas.add(entrega);
+
+        return entrega;
     }
 
     public double calcularReceitaPorProdutor(Produtor produtor) {

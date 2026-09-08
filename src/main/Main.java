@@ -3,6 +3,7 @@ package main;
 import exception.QuantidadeInvalidaException;
 import model.ProdutoAgricola;
 import model.Produtor;
+import model.Entrega;
 import service.CooperativaAgricolaService;
 
 import java.util.List;
@@ -16,15 +17,21 @@ public class Main {
         int opcao = -1;
 
         while (opcao != 0) {
-            System.out.println("\n=== Sistema AgroCoop - Cooperativa Agrícola Familiar ===");
+            System.out.println("\n==================================================");
+            System.out.println("       Sistema AgroCoop - Cooperativa Agrícola");
+            System.out.println("==================================================");
+            System.out.println();
             System.out.println("1. Cadastrar Produtor");
             System.out.println("2. Cadastrar Produto Agrícola");
             System.out.println("3. Registrar Entrega");
             System.out.println("4. Listar Produtores (e remover)");
+            System.out.println();
             System.out.println("5. Relatório: Receita por Produtor");
             System.out.println("6. Relatório: Ranking por Volume");
             System.out.println("7. Relatório: Consolidação Institucional (PAA/PNAE)");
+            System.out.println();
             System.out.println("0. Sair");
+            System.out.println();
             System.out.print("Escolha uma opção: ");
             
             try {
@@ -70,10 +77,19 @@ public class Main {
                     double qtd = Double.parseDouble(scanner.nextLine());
                     System.out.print("Venda Institucional (PAA/PNAE - 8% de incentivo)? (S/N): ");
                     boolean institucional = scanner.nextLine().equalsIgnoreCase("S");
-                    
+
                     try {
-                        service.registrarEntrega(p, prod, qtd, institucional);
-                        System.out.println("Entrega registrada com sucesso!");
+                        Entrega entrega = service.registrarEntrega(p, prod, qtd, institucional);
+
+                        System.out.println("\n--- Entrega Registrada ---");
+                        System.out.println("Produtor: " + p.getNome());
+                        System.out.println("Produto: " + prod.getNome());
+                        System.out.printf("Quantidade: %.0f %s%n", qtd, prod.getUnidadeMedida());
+                        System.out.println("Tipo de venda: " +
+                                (institucional ? "Institucional (PAA/PNAE)" : "Padrão"));
+                        System.out.printf("Valor da entrega: R$ %.2f%n", entrega.calcularValor());
+                        System.out.println("--------------------------");
+
                     } catch (QuantidadeInvalidaException e) {
                         System.out.println(e.getMessage());
                     }
@@ -96,8 +112,16 @@ public class Main {
                 case 5:
                     System.out.print("Nome do Produtor para calcular receita: ");
                     Produtor pReceita = service.buscarProdutorPorNome(scanner.nextLine());
+
                     if (pReceita != null) {
-                        System.out.printf("Receita total de %s: R$ %.2f\n", pReceita.getNome(), service.calcularReceitaPorProdutor(pReceita));
+                        double receita = service.calcularReceitaPorProdutor(pReceita);
+
+                        System.out.println("\n--- Relatório de Receita ---");
+                        System.out.println("Produtor: " + pReceita.getNome());
+                        System.out.printf("Receita total: R$ %.2f%n", receita);
+                        System.out.println("----------------------------");
+                    } else {
+                        System.out.println("Produtor não encontrado.");
                     }
                     break;
                 case 6:
