@@ -39,9 +39,9 @@ The application uses a menu-driven terminal interface to provide access to the m
 
 ![AgroCoop Main Menu](docs/images/main-menu.png)
 
-### Producer and Product Management
+### Delivery Registration
 
-![Producer and Product Management](docs/images/management.png)
+![Delivery Registration](docs/images/delivery-registration.png)
 
 ### Revenue Report
 
